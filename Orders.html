@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Orders</title>
+<style>
+body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #bdc9e0; 
+            display: flex;
+        }
+
+        
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background-color: #9eb3ec;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .sidebar a:hover {
+            background-color: #3e99e9;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            color: #688bec;
+        }
+
+        .header input {
+            padding: 10px;
+            width: 900px;
+            border-radius: 70px;
+            margin-right: 100px;
+            border: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #e2e8f0;
+            text-align: left;
+        }
+
+        .status-select {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .status-select:hover {
+            border-color: #688bec;
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: #688bec;
+            box-shadow: 0 0 5px rgba(104, 139, 236, 0.3);
+        }
+</style>
+
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Orders</h2>
+          <a href="admin.php">Home</a>
+        <a href="Orders.html">Orders</a>
+        <a href="Customers.php">Customers</a>
+        <a href="products.php">Products</a>
+        <a href="Reports.php">Reports</a>
+        <a href="Settings.php">Settings</a>
+        <a href="admin_logout.php">Logout</a>
+    </div>
+<!-- Main Content -->
+    <div class="main">
+
+        <!-- Header -->
+        <div class="header">
+            
+            <input type="text" id="ordersSearch" placeholder="Search...">
+        </div>
+<h3>Customer Orders</h3>
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer name</th>
+                <th>Phone number</th>
+                <th>Items</th>
+                <th>Delivery Address</th>
+                <th>Shipping Method</th>
+                <th>Total</th>
+                <th>Order status</th>
+                <th>Order Date</th>
+            </tr>
+            <tbody id="ordersTableBody">
+                <!-- Orders will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load orders data from admin endpoint
+        function loadOrdersData() {
+            fetch('admin_orders_data.php')
+                .then(response => {
+                    if (response.ok) return response.json();
+                    throw new Error('Failed to fetch orders');
+                })
+                .then(data => {
+                    if (data.status === 'success' && data.data) {
+                        populateOrdersTable(data.data);
+                    } else {
+                        console.error('Error loading orders:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Populate orders table with data
+        function populateOrdersTable(orders) {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px;">No orders found</td></tr>';
+                return;
+            }
+
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                const orderId = escapeHtml(order.order_id);
+                row.innerHTML = `
+                    <td>
+                        <button
+                            type="button"
+                            style="border:none;background:transparent;color:#315f99;text-decoration:underline;cursor:pointer;"
+                            onclick="selectOrder(${JSON.stringify(order)})"
+                            title="Click to view order details">
+                            ${orderId}
+                        </button>
+                    </td>
+                    <td>${escapeHtml(order.customer_name)}</td>
+                    <td>${escapeHtml(order.customer_phone)}</td>
+                    <td>${escapeHtml(order.items)}</td>
+                    <td>${escapeHtml(order.street_address + ', ' + order.city + ', ' + order.postal_code)}</td>
+                    <td>${escapeHtml(order.shipping_method)}</td>
+                    <td>R${escapeHtml(order.total_price)}</td>
+                    <td>
+                        <select class="status-select" data-order-id="${orderId}" onchange="updateOrderStatus(this)">
+                            <option value="Pending" ${order.order_status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Confirmed" ${order.order_status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                            <option value="Shipped" ${order.order_status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                            <option value="Delivered" ${order.order_status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                            <option value="Cancelled" ${order.order_status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                        </select>
+                    </td>
+                    <td>${escapeHtml(order.created_at)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update order status
+        function updateOrderStatus(selectElement) {
+            const orderId = selectElement.getAttribute('data-order-id');
+            const newStatus = selectElement.value;
+            
+            fetch('update_order_status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'orderId=' + encodeURIComponent(orderId) + '&status=' + encodeURIComponent(newStatus)
+            })
+            .then(response => response.json())
+            .then(data => {
+if (data.status === 'success') {
+                    console.log('Order status updated successfully');
+                    loadOrdersData();
+                } else {
+                    alert('Failed to update order status: ' + (data.message || 'Unknown error'));
+                    loadOrdersData();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating order status');
+                loadOrdersData(); // Reload to reset
+            });
+        }
+
+        function applyOrdersSearch(orders, q) {
+            const tbody = document.getElementById('ordersTableBody');
+            if (!tbody) return;
+            const query = (q || '').toLowerCase().trim();
+            if (!query) {
+                populateOrdersTable(orders);
+                return;
+            }
+
+            const filtered = orders.filter(o => {
+                const orderId = (o.order_id || '').toString().toLowerCase();
+                const customerName = (o.customer_name || '').toString().toLowerCase();
+                return orderId.includes(query) || customerName.includes(query);
+            });
+            populateOrdersTable(filtered);
+        }
+
+        let allOrdersCache = [];
+
+        // Load orders data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('ordersSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(){
+                    applyOrdersSearch(allOrdersCache, searchInput.value);
+                });
+            }
+
+            fetch('admin_orders_data.php')
+                .then(response => {
+                    if (response.ok) return response.json();
+                    throw new Error('Failed to fetch orders');
+                })
+                .then(data => {
+                    if (data.status === 'success' && data.data) {
+                        allOrdersCache = data.data;
+                        populateOrdersTable(allOrdersCache);
+                    } else {
+                        console.error('Error loading orders:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+    </body>
+    </html>

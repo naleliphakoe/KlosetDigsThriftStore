@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+/_inspect_db.php
+/fetch_row()){echo
+/uploads/*
+!/uploads/.gitkeep
+/images/uploads/*
+!/images/uploads/.gitkeep

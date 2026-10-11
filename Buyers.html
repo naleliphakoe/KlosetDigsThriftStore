@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Center | Kloset Digs</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #eef2ff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: rgba(15, 23, 42, 0.10);
+      --shadow-soft: 0 10px 26px rgba(15, 23, 42, 0.06);
+      --blue: #2563eb;
+      --blue-600: #1d4ed8;
+      --accent: #0ea5e9;
+      --accent-2: #38bdf8;
+      --chip-bg: rgba(37, 99, 235, 0.10);
+      --chip-fg: #1d4ed8;
+      --radius-xl: 22px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 10% -10%, rgba(37,99,235,0.18), transparent 60%),
+                  radial-gradient(900px 500px at 90% 0%, rgba(14,165,233,0.16), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      position: relative;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: '';
+      position: absolute;
+      inset: -140px -140px auto auto;
+      width: 560px;
+      height: 560px;
+      background-image: url('Logo.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0.06;
+      transform: rotate(10deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .hero {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid rgba(37,99,235,0.12);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand-logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: rgba(37,99,235,0.10);
+      border: 1px solid rgba(37,99,235,0.18);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .brand-logo img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin: 6px 0 0;
+      max-width: 640px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14.5px;
+    }
+
+    .top-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .top-links a {
+      text-decoration: none;
+      background: var(--blue);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 999px;
+      transition: transform 0.15s, background 0.15s;
+      font-weight: 800;
+      box-shadow: 0 10px 20px rgba(37,99,235,0.20);
+    }
+
+    .top-links a:hover {
+      background: var(--blue-600);
+      transform: translateY(-1px);
+    }
+
+    .main-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    nav {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      background: rgba(255,255,255,0.85);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    nav h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 750;
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      background: rgba(255,255,255,0.7);
+      transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    }
+
+    nav a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(37,99,235,0.25);
+      background: rgba(37,99,235,0.06);
+    }
+
+    nav a .nav-emoji {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: var(--chip-bg);
+      color: var(--chip-fg);
+      font-size: 16px;
+      flex: 0 0 auto;
+    }
+
+    .content {
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 22px;
+    }
+
+    /* Section background logo watermark */
+    section::before {
+      content: '';
+      position: absolute;
+      right: 26px;
+      top: 10px;
+      width: 420px;
+      height: 420px;
+      background-image: url('Logo.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0.06;
+      pointer-events: none;
+      transform: rotate(-8deg);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      border: 1px solid rgba(37,99,235,0.18);
+      background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(14,165,233,0.10));
+      color: #1d4ed8;
+    }
+
+    section h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-sub {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14.5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .list {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .list-item {
+      background: rgba(248, 250, 252, 0.75);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      padding: 16px;
+      min-height: 98px;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .list-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
+      border-color: rgba(37,99,235,0.22);
+    }
+
+    .list-item strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-weight: 850;
+      letter-spacing: -0.01em;
+    }
+
+    .list-item span {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+      display: block;
+    }
+
+    .cta-row {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: 900;
+      box-shadow: 0 18px 40px rgba(14,165,233,0.25);
+      border: 1px solid rgba(255,255,255,0.25);
+      transition: transform 0.15s;
+    }
+
+    .cta:hover { 
+      transform: translateY(-2px); 
+    }
+
+    .footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      padding: 22px 0 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 960px) {
+      .main-grid { 
+        grid-template-columns: 1fr; 
+      }
+      nav { 
+        position: relative; 
+        top: 0; 
+      }
+      .cta-row { 
+        justify-content: flex-start; 
+      }
+    }
+
+    @media (max-width: 760px) {
+      header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+      }
+      .top-links { 
+        width: 100%; 
+      }
+      .hero { 
+        width: 100%; 
+      }
+      .list { 
+        grid-template-columns: 1fr; 
+      }
+      section::before { 
+        display: none; 
+      
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { 
+        transition: none !important; 
+        scroll-behavior: auto !important; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="hero">
+        <span class="brand-logo"><img src="Logo.png" alt="Logo"></span>
+        <div>
+          <h1>Kloset Digs</h1>
+          <p>Your complete support center—policies, help, pricing guides, and direct contact with our team.</p>
+        </div>
+      </div>
+
+      <div class="top-links">
+        <a href="Thrift.php">Back to Shop</a>
+        <a href="Chat.html">Chat with Us</a>
+      </div>
+    </header>
+
+    <div class="main-grid">
+  <nav aria-label="Support menu">
+    <h2>Support Menu</h2>
+    <ul>
+      <li><a href="#buying"><span class="nav-emoji">🛍️</span>How Buying Works</a></li>
+      <li><a href="#delivery"><span class="nav-emoji">🚚</span>Delivery & Shipping</a></li>
+      <li><a href="#returns"><span class="nav-emoji">↩️</span>Refunds & Returns</a></li>
+    </ul>
+  </nav>
+
+  <div class="buying">
+
+    <!-- HOW BUYING WORKS -->
+    <section id="buying">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon">🛍️</div>
+          <div>
+            <h2>How Buying Works</h2>
+            <div class="section-sub">
+              Kloset Digs connects buyers and sellers. We provide a safe platform and handle delivery logistics, while items are sold directly by individual sellers.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="list">
+        <div class="list-item">
+          <strong>Browse and Purchase</strong>
+          <span>Explore listings from individual sellers and place your order securely through Kloset Digs.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Secure Payments</strong>
+          <span>Payments are processed securely through our platform to protect both buyers and sellers.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Order Confirmation</strong>
+          <span>Once payment is successful, the seller is notified to prepare the item for collection and delivery.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Tracking Your Order</strong>
+          <span>You will receive updates and tracking information once your order has been shipped.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Receiving Your Item</strong>
+          <span>Inspect your item upon delivery and report any issues promptly through our support channels.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Marketplace Responsibility</strong>
+          <span>Kloset Digs facilitates transactions and delivery logistics but does not own or manufacture the items listed by sellers.</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- DELIVERY -->
+    <section id="delivery">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon">🚚</div>
+          <div>
+            <h2>Delivery & Shipping</h2>
+            <div class="section-sub">
+              We coordinate delivery between buyers and sellers using the shipping method selected during checkout.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="list">
+        <div class="list-item">
+          <strong>Delivery Options</strong>
+          <span>Available delivery methods are shown during checkout. Shipping costs and estimated delivery times may vary depending on your location.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Logistics Coordination</strong>
+          <span>Kloset Digs arranges collection and delivery between buyers and sellers through trusted delivery partners.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Processing Time</strong>
+          <span>Sellers are expected to prepare orders promptly after purchase. Delivery times begin once the parcel has been handed over to the courier.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Order Tracking</strong>
+          <span>Tracking details are provided when available so you can monitor your parcel's progress.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Delivery Delays</strong>
+          <span>Unexpected delays due to weather, public holidays, or courier issues may affect delivery times. We will keep you informed whenever possible.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Incorrect Addresses</strong>
+          <span>Please ensure your shipping information is accurate. Kloset Digs cannot be held responsible for delays caused by incorrect addresses provided by users.</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- REFUNDS & RETURNS -->
+    <section id="returns">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon">↩️</div>
+          <div>
+            <h2>Refunds & Returns</h2>
+            <div class="section-sub">
+              Because items are sold by individual sellers, returns and refunds are handled on a case-by-case basis.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="list">
+        <div class="list-item">
+          <strong>Change of Mind</strong>
+          <span>Returns due to a change of mind are generally not accepted unless agreed upon by the seller.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Items Not as Described</strong>
+          <span>If an item differs significantly from its listing description, buyers should contact support within 48 hours of receiving the order.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Damaged or Incorrect Items</strong>
+          <span>Please provide photos and details of the issue. We will work with both parties to reach a fair resolution.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Refund Eligibility</strong>
+          <span>Approved refunds will be processed to the original payment method after the matter has been reviewed.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Dispute Assistance</strong>
+          <span>Kloset Digs acts as a mediator between buyers and sellers and will assist in resolving disputes in good faith.</span>
+        </div>
+
+        <div class="list-item">
+          <strong>Non-Returnable Items</strong>
+          <span>Items that have been worn, altered, washed, or damaged after delivery may not qualify for a refund or return.</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-row">
+      <a class="cta" href="Chat.html">Have More Questions? Chat with Us</a>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  © 2026 Kloset Digs • Support & Community.
+</div>

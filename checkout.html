@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Payment Checkout Form</title> 
+       <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing:border-box;
+            font-family: 'Ubuntu', sans-serif;
+        }
+        body{
+            background: rgb(187, 215, 220);
+            margin: 0 10px;
+
+        }
+        .payments{
+            background: #f8f8f8;
+            max-width: 360px;
+            margin: 80px auto;
+            height: auto;
+            padding: 35px;
+            padding-top: 70px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .payments h2{
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            color: #0d3c64
+        }
+        .form .label{
+            display:block;
+            color: #555555;
+            margin-bottom: 6px;
+        }
+        .form .input{
+            padding: 13px 0 13px 25px;
+            width: 100%;
+            text-align: center;
+            border: 2px solid #dddddd;
+            border-radius: 5px;
+            letter-spacing: 1px;
+            word-wrap: 3px;
+            outline: none;
+            font-size: 16px;
+            color: #555555;
+        }
+        .card-grp{
+            display:flex;
+            justify-content: space-between;
+        }
+        .card-item{
+            width: 48%;
+        }
+        .space{
+            margin-bottom: 20px;
+        }
+        .icon-relative{
+            position: relative;
+        }
+        .button{
+            margin-top:40px;
+            position: center;
+            text-align: center;
+            font-size: 12px;
+            background:#72a4e6;
+            color:white;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .payment-logo {
+            position: absolute;
+            top: -50px;
+            left: 170px;
+            transform: translateX(-50%);
+            height: 5em;
+            width: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            vertical-align: center;
+            margin-right: 20px;
+        }
+
+       </style>
+    </head>
+<body>
+    <div class ="wrapper">
+        <div class = "payments">
+            <img src="Logo.png" alt="KlosetDigs" class="payment-logo">
+
+            <h2>Payment Gateway</h2>
+
+            <div class ="form">
+                <div class = "card space">
+                    <label class="label">Card holder:</label>
+                    <input type="text" class="input" name="card_holder" placeholder="👤    e.g Naleli Phakoe">
+                </div>
+                <div class="card space">
+                    <label class="label"> Card number:</label>
+                    <input type="text" class="input" name="card_number" placeholder="💳  card number">
+                </div>
+                <div class="card-grp space">
+                    <div class="card-item">
+                        <label class="label">  Expiry date:</label>
+                        <input type="text" class="input" name="expiry_date" placeholder="📆  00 / 00">
+                    </div>
+                    <div class="card-item">
+                        <label class="label"> CVV:</label>
+                        <input type="text" class="input" name="Cvv" placeholder="🔒  000">
+                    </div>
+                </div>
+
+                <div id="payBtn" class="button">Pay</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // show pending order total and redirect to payment gateway
+        const pending = JSON.parse(localStorage.getItem('thrift-pending-order') || 'null');
+        if (pending) {
+            const el = document.createElement('div');
+            el.style.marginTop = '12px';
+            el.style.textAlign = 'center';
+            el.innerHTML = `<p><strong>Total:</strong> R${pending.totalPrice.toFixed(2)}</p>`;
+            document.querySelector('.form').insertBefore(el, document.getElementById('payBtn'));
+        }
+
+        document.getElementById('payBtn').addEventListener('click', async function(){
+            if (!pending) return alert('No pending order found.');
+            const btn = this;
+            btn.textContent = 'Processing...';
+            btn.style.pointerEvents = 'none';
+
+            try {
+                const formData = new FormData();
+                formData.append('fullName', pending.fullName || '');
+                formData.append('streetAddress', pending.streetAddress || '');
+                formData.append('city', pending.city || '');
+                formData.append('postalCode', pending.postalCode || '');
+                formData.append('phoneNumber', pending.phoneNumber || '');
+                formData.append('shippingMethod', pending.shippingMethod || '');
+                formData.append('courierOption', pending.courierOption || '');
+                formData.append('cartItems', JSON.stringify(pending.cartItems || pending.cartItems || []));
+formData.append('totalPrice', String(pending.totalPrice || 0));
+
+                const resp = await fetch('address.php', { method: 'POST', body: formData });
+
+                // Read response as text first so we can debug non-JSON server errors
+                const text = await resp.text();
+                let data = null;
+                try { data = JSON.parse(text); } catch(e) {}
+
+                if (data && data.success) {
+
+                    // clear local storage keys and redirect to confirmation
+                    localStorage.removeItem('thrift-pending-order');
+                    localStorage.removeItem('thrift-cart');
+                    // redirect to confirmation page with order id
+                    const orderId = encodeURIComponent(data.orderId || data.orderID || data.order_id || '');
+                    if (orderId) {
+                        window.location.href = 'orderConfirmation.php?orderId=' + orderId;
+                    } else {
+                        // fallback to session-based confirmation
+                        window.location.href = 'orderConfirmation.php';
+                    }
+                } else {
+                    alert('Order failed: ' + (data.message || 'Unknown error'));
+                    btn.textContent = 'Pay';
+                    btn.style.pointerEvents = '';
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Network or server error while placing order.');
+                btn.textContent = 'Pay';
+                btn.style.pointerEvents = '';
+            }
+        });
+    </script>
+</body>
+</html>

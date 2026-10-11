@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Center | Kloset Digs</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #eef2ff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: rgba(15, 23, 42, 0.10);
+      --shadow-soft: 0 10px 26px rgba(15, 23, 42, 0.06);
+      --blue: #2563eb;
+      --blue-600: #1d4ed8;
+      --accent: #0ea5e9;
+      --accent-2: #38bdf8;
+      --chip-bg: rgba(37, 99, 235, 0.10);
+      --chip-fg: #1d4ed8;
+      --radius-xl: 22px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 10% -10%, rgba(37,99,235,0.18), transparent 60%),
+                  radial-gradient(900px 500px at 90% 0%, rgba(14,165,233,0.16), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      position: relative;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: '';
+      position: absolute;
+      inset: -140px -140px auto auto;
+      width: 560px;
+      height: 560px;
+      background-image: url('Logo.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0.06;
+      transform: rotate(10deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .hero {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid rgba(37,99,235,0.12);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand-logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: rgba(37,99,235,0.10);
+      border: 1px solid rgba(37,99,235,0.18);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .brand-logo img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin: 6px 0 0;
+      max-width: 640px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14.5px;
+    }
+
+    .top-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .top-links a {
+      text-decoration: none;
+      background: var(--blue);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 999px;
+      transition: transform 0.15s, background 0.15s;
+      font-weight: 800;
+      box-shadow: 0 10px 20px rgba(37,99,235,0.20);
+    }
+
+    .top-links a:hover {
+      background: var(--blue-600);
+      transform: translateY(-1px);
+    }
+
+    .main-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    nav {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      background: rgba(255,255,255,0.85);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    nav h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 750;
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      background: rgba(255,255,255,0.7);
+      transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    }
+
+    nav a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(37,99,235,0.25);
+      background: rgba(37,99,235,0.06);
+    }
+
+    nav a .nav-emoji {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: var(--chip-bg);
+      color: var(--chip-fg);
+      font-size: 16px;
+      flex: 0 0 auto;
+    }
+
+    .content {
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 22px;
+    }
+
+    /* Section background logo watermark */
+    section::before {
+      content: '';
+      position: absolute;
+      right: 26px;
+      top: 10px;
+      width: 420px;
+      height: 420px;
+      background-image: url('Logo.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0.06;
+      pointer-events: none;
+      transform: rotate(-8deg);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      border: 1px solid rgba(37,99,235,0.18);
+      background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(14,165,233,0.10));
+      color: #1d4ed8;
+    }
+
+    section h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-sub {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14.5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .list {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .list-item {
+      background: rgba(248, 250, 252, 0.75);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      padding: 16px;
+      min-height: 98px;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .list-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
+      border-color: rgba(37,99,235,0.22);
+    }
+
+    .list-item strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-weight: 850;
+      letter-spacing: -0.01em;
+    }
+
+    .list-item span {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+      display: block;
+    }
+
+    .cta-row {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: 900;
+      box-shadow: 0 18px 40px rgba(14,165,233,0.25);
+      border: 1px solid rgba(255,255,255,0.25);
+      transition: transform 0.15s;
+    }
+
+    .cta:hover { 
+      transform: translateY(-2px); 
+    }
+
+    .footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      padding: 22px 0 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 960px) {
+      .main-grid { 
+        grid-template-columns: 1fr; 
+      }
+      nav { 
+        position: relative; 
+        top: 0; 
+      }
+      .cta-row { 
+        justify-content: flex-start; 
+      }
+    }
+
+    @media (max-width: 760px) {
+      header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+      }
+      .top-links { 
+        width: 100%; 
+      }
+      .hero { 
+        width: 100%; 
+      }
+      .list { 
+        grid-template-columns: 1fr; 
+      }
+      section::before { 
+        display: none; 
+      
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { 
+        transition: none !important; 
+        scroll-behavior: auto !important; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="hero">
+        <span class="brand-logo"><img src="Logo.png" alt="Logo"></span>
+        <div>
+          <h1>Kloset Digs</h1>
+          <p>Your complete support center—policies, help, pricing guides, and direct contact with our team.</p>
+        </div>
+      </div>
+
+      <div class="top-links">
+        <a href="Thrift.php">Back to Shop</a>
+        <a href="Chat.html">Chat with Us</a>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <nav aria-label="Support menu">
+        <h2>Support Menu</h2>
+        <ul>
+          <li><a href="#terms"><span class="nav-emoji">📄</span>Terms of Service</a></li>
+          <li><a href="#privacy"><span class="nav-emoji">🔒</span>Privacy Policy</a></li>
+          <li><a href="#help"><span class="nav-emoji">💬</span>Help Centre</a></li>
+          <li><a href="#pricing"><span class="nav-emoji">📈</span>Selling & Pricing</a></li>
+        </ul>
+      </nav>
+
+      <div class="content">
+        <section id="terms">
+          <div class="section-head">
+            <div class="section-title">
+              <div class="section-icon">📄</div>
+              <div>
+                <h2>Terms of Service</h2>
+                <div class="section-sub">Welcome to Kloset Digs. By accessing and using this platform, you agree to be bound by the following terms and conditions.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="list">
+            <div class="list-item">
+              <strong>Account Responsibility</strong>
+              <span>You are responsible for maintaining the confidentiality of your account credentials and for all activity under your account. Notify us immediately of any unauthorized access.</span>
+            </div>
+            <div class="list-item">
+              <strong>Prohibited Conduct</strong>
+              <span>You agree not to engage in harassment, fraud, copyright infringement, or any illegal activity. Violators may face account suspension or legal action.</span>
+            </div>
+            <div class="list-item">
+              <strong>Listing Authenticity</strong>
+              <span>All items sold through Kloset Digs must be authentic, lawfully obtained, and accurately described. Misrepresentation may result in removal and penalties.</span>
+            </div>
+            <div class="list-item">
+              <strong>Dispute Resolution</strong>
+              <span>For disputes between buyers and sellers, we will facilitate resolution. Both parties agree to cooperate in good faith to reach a fair outcome.</span>
+            </div>
+            <div class="list-item">
+              <strong>Limitation of Liability</strong>
+              <span>Kloset Digs is provided on an "as-is" basis. We are not liable for direct, indirect, or incidental damages arising from your use of the platform.</span>
+            </div>
+            <div class="list-item">
+              <strong>Changes to Terms</strong>
+              <span>We reserve the right to modify these terms at any time. Continued use of the platform constitutes acceptance of updated terms.</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="privacy">
+          <div class="section-head">
+            <div class="section-title">
+              <div class="section-icon">🔒</div>
+              <div>
+                <h2>Privacy Policy</h2>
+                <div class="section-sub">Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="list">
+            <div class="list-item">
+              <strong>Information We Collect</strong>
+              <span>We collect account information (name, email, location), transaction data, and usage analytics to improve our service and prevent fraud.</span>
+            </div>
+            <div class="list-item">
+              <strong>How We Use Your Data</strong>
+              <span>Your information is used to process transactions, communicate with you, personalize your experience, and comply with legal obligations. We never sell your data to third parties.</span>
+            </div>
+            <div class="list-item">
+              <strong>Cookies and Tracking</strong>
+              <span>We use cookies to enhance your experience and analyze site traffic. You can control cookie settings in your browser preferences.</span>
+            </div>
+            <div class="list-item">
+              <strong>Data Security</strong>
+              <span>We implement industry-standard encryption and security measures to protect your data. However, no system is 100% secure; use strong passwords and keep your account safe.</span>
+            </div>
+            <div class="list-item">
+              <strong>Third-Party Services</strong>
+              <span>We may share data with payment processors and shipping partners only as necessary to complete transactions. These partners are bound by confidentiality agreements.</span>
+            </div>
+            <div class="list-item">
+              <strong>Your Rights</strong>
+              <span>You have the right to access, correct, or delete your personal information. Contact us at support@klosetdigs.com to exercise these rights.</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="help">
+          <div class="section-head">
+            <div class="section-title">
+              <div class="section-icon">💬</div>
+              <div>
+                <h2>Help Centre</h2>
+                <div class="section-sub">Find answers to common questions and learn how to use Kloset Digs effectively.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="list">
+            <div class="list-item">
+              <strong>How do I create an account?</strong>
+              <span>Click "Sign Up" and fill in your email, password, and profile details. Verify your email to activate your account and start buying or selling.</span>
+            </div>
+            <div class="list-item">
+              <strong>How do I list an item for sale?</strong>
+              <span>Go to "Create a Listing," upload photos, add a description, set your price, and submit. Your listing goes live immediately and appears in search results.</span>
+            </div>
+            <div class="list-item">
+              <strong>What payment methods do you accept?</strong>
+              <span>We accept credit/debit cards, PayPal, and bank transfers. All payments are processed securely through our payment partner.</span>
+            </div>
+            <div class="list-item">
+              <strong>How does shipping work?</strong>
+              <span>You can arrange shipping yourself or use our integrated partners. Buyers pay shipping at checkout. Provide tracking info to confirm delivery.</span>
+            </div>
+            <div class="list-item">
+              <strong>Can I edit or delete a listing?</strong>
+              <span>Yes, you can edit active listings anytime. To delete, mark the item as "Sold" or contact support if you need to remove it permanently.</span>
+            </div>
+            <div class="list-item">
+              <strong>What if there's a problem with my purchase?</strong>
+              <span>Contact the seller first. If unresolved, escalate to our support team with photos or evidence, and we'll help mediate a fair resolution.</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="pricing">
+          <div class="section-head">
+            <div class="section-title">
+              <div class="section-icon">📈</div>
+              <div>
+                <h2>Selling & Pricing Guide</h2>
+                <div class="section-sub">Understand our fees, pricing strategies, and how to maximize your sales on Kloset Digs.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="list">
+            <div class="list-item">
+              <strong>Listing Fees</strong>
+              <span>Creating a listing is free. You only pay when an item sells—our platform fee is 10% of the sale price.</span>
+            </div>
+            <div class="list-item">
+              <strong>Pricing Your Items</strong>
+              <span>Research similar listings to set competitive prices. Items priced 5–15% below average sell faster. Consider brand, condition, and demand.</span>
+            </div>
+            <div class="list-item">
+              <strong>Commission Breakdown</strong>
+              <span>For a R100 sale, you receive R90 after our 10% commission. Payment is processed within 3–5 business days after the buyer confirms delivery.</span>
+            </div>
+            <div class="list-item">
+              <strong>Bulk Discounts</strong>
+              <span>Sellers with 50+ active listings qualify for a reduced 8% commission. Contact support to confirm eligibility.</span>
+            </div>
+            <div class="list-item">
+              <strong>Bundle Deals</strong>
+              <span>Bundling similar items can attract buyers and increase average order value. Set a slight discount to encourage larger purchases.</span>
+            </div>
+            <div class="list-item">
+              <strong>Seasonal Trends</strong>
+              <span>Spring/summer drives demand for light clothing and dresses. Fall/winter boosts demand for coats and sweaters. Price accordingly to capitalize on trends.</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="cta-row">
+          <a class="cta" href="Chat.html">Have More Questions? Chat with Us</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">© 2026 Kloset Digs • Support & Community.</div>
+  </div>
+</body>
+</html>
+
